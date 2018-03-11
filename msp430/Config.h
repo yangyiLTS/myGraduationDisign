@@ -6,6 +6,7 @@
 //作者：www.avrgcc.com
 //时间：2014.03.01
 ********************************************************************/
+
 //延时函数，IAR自带，经常使用到
 #define CPU_F ((double)8000000)   //外部高频晶振8MHZ
 //#define CPU_F ((double)32768)   //外部低频晶振32.768KHZ
@@ -284,13 +285,16 @@ void LCD_write_char(unsigned char x,unsigned char y,unsigned char data)
 }
 
 
+//***********************************************************************
+//	显示屏整形写入函数
+//***********************************************************************
+
 void LCD_write_int(unsigned char x,unsigned char y,unsigned int data)
 {
-  uint a = data % 10;
   if(data >= 10){
     LCD_write_int(x - 1, y, data / 10);
   }
-  LCD_write_char(x, y, a + 0x30);
+  LCD_write_char(x, y, data % 10 + 0x30);
 } 
 
 //***********************************************************************

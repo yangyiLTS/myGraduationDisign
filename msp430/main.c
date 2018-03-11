@@ -6,15 +6,18 @@
 //作者：yangyi
 //时间：2018.03.01
 ********************************************************************/
-
+//maxdrop = 95
 #include <msp430x14x.h>
 #include "Config.h"                     //开发板配置头文件，主要配置IO端口信息
-#define MAX_DROP 150
+#include <stdio.h>
+#define MAX_DROP 80
 #define TARGET_DROP 60
 uchar Flag = 0;                           //标志位
 uint Time = 0;                           //时间计数变量
 uint count = 0;
-uint set_drop = MAX_DROP;
+uint set_drop = 60;
+uint total = 0;
+uint capa = 20 * 100;
 //int position = 0;
 //***********************************************************************
 //               MSP430IO口初始化
@@ -47,7 +50,7 @@ void Port_Init()
 void TIMERA_Init(void)                                   //连续计数模式，计数到0XFFFF产生中断
 {
   TACTL |= TASSEL1 + TACLR + ID0 + ID1 + MC0 + TAIE;     //SMCLK做时钟源，8分频，连续计数模式，计数到0XFFFF，开中断
-  TACCR0 = 999;
+  TACCR0 = 9999;
 }
 
 //**********************************************************************
@@ -91,7 +94,7 @@ __interrupt void Timer_A(void)
   {
   case 2:break;
   case 4:break;
-  case 10:count++;if(count > 60000) count = 0;break;                         //设置标志位Flag
+  case 10:count++;if(count > 6000) count = 6000;break;                         //设置标志位Flag
   }
 }
 //**********************************************************************
@@ -109,7 +112,9 @@ __interrupt void P1_IRQ(void)
     count = 0;
     Flag = 1;
     P1IFG=0x00;
-    delay_ms(55);
+    delay_ms(70);
+    //LCD_clear();
+    //LCD_write_int(15,0,total);
     break;
   case 0x01:  if(set_drop<MAX_DROP) set_drop++; P1IFG=0x00; delay_ms(20); break;
   case 0x02:  if(set_drop>0) set_drop--; P1IFG=0x00; delay_ms(20); break;
@@ -117,6 +122,13 @@ __interrupt void P1_IRQ(void)
   case 0x08: while(~P1IN & 0x08) motor_step(0); P1IFG=0x00; break;
   }
 }
+
+void LCD_write_int2(unsigned char x,unsigned char y,unsigned int data)
+{
+  uchar s[16];
+  sprintf(s, "%d", data);
+  LCD_write_str(x, y, s);
+} 
 
 
 
@@ -144,41 +156,59 @@ void main(void)
   }
   uchar now = 0;
   while(1){
-    ulong total = 0;
-
     LCD_write_str(0,0,"SET:");
-    LCD_write_int(6,0,set_drop);
-    LCD_write_int(15,1,position);
+    LCD_write_int2(4,0,set_drop);
+    LCD_write_int2(7,1,position);
     if(Flag){
+      capa--;
       LCD_clear();
-      Time -= 55;
+      Time += 7;
+      LCD_write_int2(0,1,capa / 20);
+      LCD_write_str(3,1, "mL");
       quene[now] = Time;
       //LCD_write_int(15,0,Time);
+      total = 0;
       for(uchar i = 0; i < 5; i++){
-        total += (unsigned long)quene[i];  
+        total += quene[i];  
       }
-      total = 300000 / total;
+      total = total / 5;
+      uint cur = 6000 / total;
       LCD_write_str(9,0,"CUR:");
-      LCD_write_int(15,0,total);
-      now++;
-      
-      if(now){                                  //启动电机调节滴速
-        if(total > set_drop){
-          int _ = total - set_drop; 
+      LCD_write_int(15,0,cur);
+      if(now % 3 == 0){                                  //启动电机调节滴速
+        uint para; 
+        switch(cur / 10){
+        case 4:para = 3;break;
+        case 3:para = 3;break;
+        case 2:para = 5;break;
+        case 1:para = 8;break;
+        case 0:para = 8;break;
+        default: para = 1;break;
+        }
+        if(cur > set_drop){
+          int _ = (cur - set_drop) * 2 / para + 1; 
           while(_--)
             motor_step(0);
         }
-        else if(total < set_drop){
-          int _ = set_drop - total;
+        else if(cur < set_drop){
+          int _ = (set_drop - cur) * 2 / para + 1;
           while(_--)
             motor_step(1);
         }
       }
-      
-      Flag = 0;
       if (now == 4){
         now = 0;
       }
+      else {
+        now++;
+      }
+      Flag = 0;
+    }
+    if (capa == 0){
+      while(position != 19880){
+        motor_step(0);
+      }
+      while(1){ }
     }
   }
 }
