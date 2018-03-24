@@ -179,7 +179,7 @@ __interrupt void P1_IRQ(void)
     P1IFG=0x00;
     delay_ms(70);
     drop_deal();
-    LCD_Show();
+    //LCD_Show();
     //speed_adjust();
     break;
   case 0x01:  if(set_drop<MAX_DROP) set_drop++; P1IFG=0x00; delay_ms(50); break;
@@ -211,9 +211,11 @@ void main(void)
   _EINT();
   LCD_clear();
   while (1){
+    LCD_Show();
     if(Flag){
       speed_adjust();
       Flag = 0;
+      delay_ms(500);
     }
     delay_ms(2000);
   }
