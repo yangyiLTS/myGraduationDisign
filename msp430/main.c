@@ -17,7 +17,11 @@ uint Time = 0;                           //时间计数变量
 uint count = 0;
 uint set_drop = 60;
 uint total = 0;
-uint capa = 20 * 500;
+uint capa = 22 * 500;
+uint dropspeed;
+uint dropq[5] = { 100, 100, 100, 100, 100 };
+uint cur;
+
 //int position = 0;
 //***********************************************************************
 //               MSP430IO口初始化
@@ -44,37 +48,6 @@ void Port_Init()
   LED8  = 0xFF;                   //先关闭所有LED
 }
 
-//*************************************************************************
-//               MSP430串口初始化
-//*************************************************************************
-void UART_Init()
-{
-  U0CTL|=SWRST;               //复位SWRST
-  U0CTL|=CHAR;                //8位数据模式 
-  U0TCTL|=SSEL1;              //SMCLK为串口时钟
-  U0BR1=baud_h;               //BRCLK=8MHZ,Baud=BRCLK/N
-  U0BR0=baud_l;               //N=UBR+(UxMCTL)/8
-  U0MCTL=0x00;                //微调寄存器为0，波特率9600bps
-  ME1|=UTXE0;                 //UART1发送使能
-  ME1|=URXE0;                 //UART1接收使能
-  U0CTL&=~SWRST;
-  IE1|=URXIE0;                //接收中断使能位
-  
-  P3SEL|= BIT4;               //设置IO口为普通I/O模式
-  P3DIR|= BIT4;               //设置IO口方向为输出
-  P3SEL|= BIT5;
-}
-
-//*************************************************************************
-//              串口0发送数据函数
-//*************************************************************************
-
-void Send_Byte(uchar data)
-{
-  while((IFG1&UTXIFG0)==0);          //发送寄存器空的时候发送数据
-    U0TXBUF=data;
-}
-
 //***********************************************************************
 //             TIMERA初始化，设置为UP模式计数
 //***********************************************************************
@@ -93,7 +66,7 @@ uchar step_down[4] = {0x05,0x06,0x0A,0x09};  //反转
 void motor_step(uchar d){
   if (d){
     for(uchar i = 0; i < 4; i++){
-      P3OUT |= step_up[i];
+      P3OUT = step_up[i];
       delay_ms(1);
     }
     position++;
@@ -104,7 +77,7 @@ void motor_step(uchar d){
   }
   else{
     for(char i = 0; i < 4 ; i++){
-      P3OUT |= step_down[i];
+      P3OUT = step_down[i];
       delay_ms(1);
     }
     position--;
@@ -116,14 +89,67 @@ void motor_step(uchar d){
 }
 
 //*************************************************************************
-//               处理来自串口 0 的接收中断
+//               水滴下时处理函数
 //*************************************************************************
-#pragma vector=UART0RX_VECTOR
-__interrupt void UART0_RX_ISR(void)
-{
-  uchar data=0;
-  data=U0RXBUF;                       //接收到的数据存起来
-  Send_Byte('R');                    //将接收到的数据再发送出去
+int now = 0;
+void drop_deal(){
+  Time += 7;
+  if (Time < 25){
+    return;
+  }
+  capa--;
+  dropq[now] = Time;
+  uint total = 0;
+  for(uchar i = 0; i < 5; i++){
+    total += dropq[i];  
+  }
+  total = total / 5;
+  dropspeed = 6000 / total;
+  if (now == 4){
+    now = 0;
+  }
+  else {
+    now++;
+  }
+}
+
+//*************************************************************************
+//               展示信息
+//*************************************************************************
+void LCD_Show(){
+  LCD_clear();
+  LCD_write_str(0,0,"SET:");
+  LCD_write_int(6,0,set_drop);
+  LCD_write_int(15,1,position);
+  LCD_write_int(2,1,capa / 22);
+  LCD_write_str(3,1, "mL");
+  LCD_write_str(9,0,"CUR:");
+  LCD_write_int(15,0,dropspeed);
+}
+
+
+void speed_adjust(){
+  if(now % 1 == 0){
+    uint para; 
+    switch(dropspeed / 10){
+    case 4:para = 3;break;
+    case 3:para = 3;break;
+    case 2:para = 5;break;
+    case 1:para = 8;break;
+    case 0:para = 8;break;
+    default: para = 2;break;
+    }
+    if(dropspeed > set_drop){
+      uchar _ = (dropspeed - set_drop) * 2 / para + 1; 
+      while(_--)
+      motor_step(0);
+    }
+    else if(dropspeed < set_drop){
+      uchar _ = (set_drop - dropspeed) * 2 / para + 1;
+      while(_--)
+      motor_step(1);
+    }
+  }
 }
 
 //***********************************************************************
@@ -145,9 +171,6 @@ __interrupt void Timer_A(void)
 #pragma vector = PORT1_VECTOR
 __interrupt void P1_IRQ(void)
 {
-  //LED8  = 0x00;
-  //delay_ms(100);
-  //LED8  = 0xFF;
   switch(P1IFG & 0x1F){
   case 0x10:
     Time = count;
@@ -155,8 +178,9 @@ __interrupt void P1_IRQ(void)
     Flag = 1;
     P1IFG=0x00;
     delay_ms(70);
-    //LCD_clear();
-    //LCD_write_int(15,0,total);
+    drop_deal();
+    LCD_Show();
+    //speed_adjust();
     break;
   case 0x01:  if(set_drop<MAX_DROP) set_drop++; P1IFG=0x00; delay_ms(50); break;
   case 0x02:  if(set_drop>0) set_drop--; P1IFG=0x00; delay_ms(50); break;
@@ -184,10 +208,16 @@ void main(void)
   Port_Init();                                  //端口初始化
   LCD_init();                                   //液晶参数初始化设置
   TIMERA_Init();                                //设置TIMERA
-  UART_Init();
   _EINT();
   LCD_clear();
-  uint quene[5];
+  while (1){
+    if(Flag){
+      speed_adjust();
+      Flag = 0;
+    }
+    delay_ms(2000);
+  }
+  /*uint quene[5];
   for(uchar i = 0;i<5;i++){
     quene[i] = 400;  
   }
@@ -196,7 +226,6 @@ void main(void)
     LCD_write_str(0,0,"SET:");
     LCD_write_int(6,0,set_drop);
     LCD_write_int(15,1,position);
-    UART_Init();
     if(Flag){
       capa--;
       LCD_clear();
@@ -248,5 +277,5 @@ void main(void)
       }
       set_drop = 0;
     }
-  }
+  }*/
 }
