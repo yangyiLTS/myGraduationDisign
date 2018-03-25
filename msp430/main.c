@@ -9,15 +9,27 @@
 //maxdrop = 95
 #include <msp430x14x.h>
 #include "Config.h"                     //开发板配置头文件，主要配置IO端口信息
-//#include <stdio.h>
+#include "GUI.h"                        //GUI头文件
+#include "Ascii_8x16.h"                 //8x16大小字符
+#include "GB2424.h"                     //24x24像素大小的汉字
+//#include "GB2433.h"                     //24x33像素大小的汉字
+#include "Chinese.h"                    //16x16像素大小的汉字
+#include "GB2435.h"                     //24x35像素大小的汉字
+#include "Touch.h"                      //TFT触摸操作头文件
+#include "Touch.c"                      //TFT触摸操作初始化及函数
+#include "TFT28.h"                      //TFT显示头文件
+#include "TFT28.c"                      //TFT显示操作初始化及函数
+#include "GUI.c"                        //GUI函数
+
 #define MAX_DROP 80
 #define TARGET_DROP 60
+#define VOLUME 22 * 500
 uchar Flag = 0;                           //标志位
 uint Time = 0;                           //时间计数变量
 uint count = 0;
 uint set_drop = 60;
 uint total = 0;
-uint capa = 22 * 500;
+uint capa = VOLUME;
 uint dropspeed;
 uint dropq[5] = { 100, 100, 100, 100, 100 };
 uint cur;
@@ -42,7 +54,10 @@ void Port_Init()
   P4SEL = 0x00;                   //显示屏数据口，控制口
   P4DIR = 0xFF;                   //数据口输出模式
   P5SEL = 0x00;
-  P5DIR|= BIT5 + BIT6 + BIT7;     //控制口设置为输出模式
+  P5DIR|= BIT0 + BIT1 + BIT3 + BIT5 + BIT6 + BIT7;  //TFT显示控制线
+  
+  P2SEL = 0x00;
+  P2DIR |= BIT3 + BIT4 + BIT5 + BIT6;               //触摸控制线
   
   LED8DIR = 0xFF;                 //P6口输出模式
   LED8  = 0xFF;                   //先关闭所有LED
@@ -55,6 +70,17 @@ void TIMERA_Init(void)                                   //连续计数模式，计数到0
 {
   TACTL |= TASSEL1 + TACLR + ID0 + ID1 + MC0 + TAIE;     //SMCLK做时钟源，8分频，连续计数模式，计数到0XFFFF，开中断
   TACCR0 = 9999;
+}
+
+void DisplayDesk(void){
+  CLR_Screen(Black);
+  GUIline(0,59,239,59,Yellow);
+  GUIfull(0,60,60,239,Green);
+  LCD_PutString24(65,78,"当前速度", Yellow, Black);
+  LCD_PutString24(65,138,"剩余容量", Yellow, Black);
+  LCD_PutString24(65,198,"设定速度", Yellow, Black);
+  LCD_PutString24(65,158,"设定容量", Yellow, Black);
+  
 }
 
 //**********************************************************************
