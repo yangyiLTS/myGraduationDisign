@@ -23,8 +23,8 @@
 
 #define MAX_DROP 80
 #define TARGET_DROP 60
-#define VOLUME 22 * 500
-uchar Flag = 0;                           //标志位
+#define VOLUME 22 * 550
+uchar Flag = 1;                           //标志位
 uint Time = 0;                           //时间计数变量
 uint count = 0;
 uint set_drop = 60;
@@ -32,8 +32,8 @@ uint total = 0;
 uint capa = VOLUME;
 uint dropspeed;
 uint dropq[5] = { 100, 100, 100, 100, 100 };
-uint cur;
-
+uint cur = 60;
+uint Device_code;                    //TFT控制IC型号，2.8寸为ILI9320
 //int position = 0;
 //***********************************************************************
 //               MSP430IO口初始化
@@ -74,13 +74,13 @@ void TIMERA_Init(void)                                   //连续计数模式，计数到0
 
 void DisplayDesk(void){
   CLR_Screen(Black);
-  GUIline(0,59,239,59,Yellow);
-  GUIfull(0,60,60,239,Green);
-  LCD_PutString24(65,78,"当前速度", Yellow, Black);
-  LCD_PutString24(65,138,"剩余容量", Yellow, Black);
-  LCD_PutString24(65,198,"设定速度", Yellow, Black);
-  LCD_PutString24(65,158,"设定容量", Yellow, Black);
-  
+  GUIline(0,59,240,59,Yellow);
+  GUIfull(0,60,60,320,Green);
+  GUIline(61,60,61,320,Yellow);
+  LCD_PutString24(65,65,"当前速度", Yellow, Black);
+  LCD_PutString24(65,125,"剩余容量", Yellow, Black);
+  LCD_PutString24(65,185,"设定速度", Yellow, Black);
+  LCD_PutString24(65,245,"设定容量", Yellow, Black);
 }
 
 //**********************************************************************
@@ -139,6 +139,40 @@ void drop_deal(){
   }
 }
 
+void TFT_write_int(unsigned short x, unsigned short y, unsigned int data)
+{
+  if(data >= 10){
+    TFT_write_int(x - 8, y, data / 10);
+  }
+  LCD_PutChar(x, y, data % 10 + 0x30, Blue2, Black);
+} 
+
+void TFT_show(){
+  uint progress = (VOLUME/22 - capa/22)*280 / (VOLUME/22) + 60;
+  uint resttime = capa / dropspeed;
+  GUIline(0,progress,60,progress,Black);
+  GUIfull(65,95,121,105,Black);
+  TFT_write_int(120,95, dropspeed);
+  LCD_PutString(136,95," mL/s",Blue,Black);
+  GUIfull(70,155,136,165,Black);
+  TFT_write_int(120,155, capa/22);
+  LCD_PutString(136,155," mL",Blue,Black);
+  TFT_write_int(120, 215, set_drop);
+  LCD_PutString(136,215, " mL/s",Blue,Black);
+  TFT_write_int(120, 275, VOLUME / 22);
+  LCD_PutString(136,275," mL",Blue,Black);
+  LCD_PutSingleChar2435(108,13,10,Yellow,Black);
+  uchar h1,h2,m1,m2;
+  h1 = resttime / 600;
+  h2 = resttime / 60 % 10;
+  m1 = resttime % 60 / 10;
+  m2 = resttime % 10;
+  LCD_PutSingleChar2435(60,13,h1,Yellow,Black);
+  LCD_PutSingleChar2435(84,13,h2,Yellow,Black);
+  LCD_PutSingleChar2435(132,13,m1,Yellow,Black);
+  LCD_PutSingleChar2435(156,13,m2,Yellow,Black);
+}
+
 //*************************************************************************
 //               展示信息
 //*************************************************************************
@@ -188,7 +222,7 @@ __interrupt void Timer_A(void)
   {
   case 2:break;
   case 4:break;
-  case 10:count++;if(count > 6000) count = 6000;break;                         //设置标志位Flag
+  case 10:count++;if(count > 3000) {if(count > 6000) count = 0; dropspeed = 1;};break;                         //设置标志位Flag
   }
 }
 //**********************************************************************
@@ -234,76 +268,19 @@ void main(void)
   Port_Init();                                  //端口初始化
   LCD_init();                                   //液晶参数初始化设置
   TIMERA_Init();                                //设置TIMERA
+  Device_code=0x9320;                //TFT控制IC型号
+  TFT_Initial();                     //初始化LCD	
+  //LCD_clear();
+  DisplayDesk();
   _EINT();
-  LCD_clear();
   while (1){
     LCD_Show();
+    TFT_show();
     if(Flag){
       speed_adjust();
       Flag = 0;
-      delay_ms(500);
+      delay_ms(1500);
     }
-    delay_ms(2000);
+    delay_ms(1000);
   }
-  /*uint quene[5];
-  for(uchar i = 0;i<5;i++){
-    quene[i] = 400;  
-  }
-  uchar now = 0;
-  while(1){
-    LCD_write_str(0,0,"SET:");
-    LCD_write_int(6,0,set_drop);
-    LCD_write_int(15,1,position);
-    if(Flag){
-      capa--;
-      LCD_clear();
-      Time += 7;
-      LCD_write_int(2,1,capa / 20);
-      LCD_write_str(3,1, "mL");
-      quene[now] = Time;
-      //LCD_write_int(15,0,Time);
-      total = 0;
-      for(uchar i = 0; i < 5; i++){
-        total += quene[i];  
-      }
-      total = total / 5;
-      uint cur = 6000 / total;
-      LCD_write_str(9,0,"CUR:");
-      LCD_write_int(15,0,cur);
-      if(now % 3 == 0){                                  //启动电机调节滴速
-        uint para; 
-        switch(cur / 10){
-        case 4:para = 3;break;
-        case 3:para = 3;break;
-        case 2:para = 5;break;
-        case 1:para = 8;break;
-        case 0:para = 8;break;
-        default: para = 1;break;
-        }
-        if(cur > set_drop){
-          int _ = (cur - set_drop) * 2 / para + 1; 
-          while(_--)
-            motor_step(0);
-        }
-        else if(cur < set_drop){
-          int _ = (set_drop - cur) * 2 / para + 1;
-          while(_--)
-            motor_step(1);
-        }
-      }
-      if (now == 4){
-        now = 0;
-      }
-      else {
-        now++;
-      }
-      Flag = 0;
-    }
-    if (capa == 0){
-      while(position != 19880){
-        motor_step(0);
-      }
-      set_drop = 0;
-    }
-  }*/
 }

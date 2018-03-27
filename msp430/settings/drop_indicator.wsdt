@@ -24,7 +24,7 @@
     <Windows>
       
       
-    <Wnd2>
+    <Wnd0>
         <Tabs>
           <Tab>
             <Identity>TabID-8529-21870</Identity>
@@ -36,7 +36,7 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd2><Wnd3>
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1>
         <Tabs>
           <Tab>
             <Identity>TabID-7528-8156</Identity>
@@ -46,20 +46,20 @@
           </Tab>
         </Tabs>
         
-      <SelectedTab>0</SelectedTab></Wnd3></Windows>
+      <SelectedTab>0</SelectedTab></Wnd1></Windows>
     <Editor>
       
       
       
       
-    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>68</YPos><SelStart>2873</SelStart><SelEnd>2873</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Config.h</Filename><XPos>0</XPos><YPos>284</YPos><SelStart>9223</SelStart><SelEnd>9223</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\Program Files (x86)\IAR Systems\Embedded Workbench 6.0 Evaluation\430\inc\in430.h</Filename><XPos>0</XPos><YPos>53</YPos><SelStart>2534</SelStart><SelEnd>2534</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\Program Files (x86)\IAR Systems\Embedded Workbench 6.0 Evaluation\430\inc\msp430x14x.h</Filename><XPos>0</XPos><YPos>56</YPos><SelStart>2715</SelStart><SelEnd>2715</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\GB2433.h</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>601</SelStart><SelEnd>601</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\TFT28.C</Filename><XPos>0</XPos><YPos>255</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\GB2424.h</Filename><XPos>0</XPos><YPos>141</YPos><SelStart>7808</SelStart><SelEnd>7808</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Config.h</Filename><XPos>0</XPos><YPos>124</YPos><SelStart>9488</SelStart><SelEnd>9488</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\Program Files (x86)\IAR Systems\Embedded Workbench 6.0 Evaluation\430\inc\in430.h</Filename><XPos>0</XPos><YPos>53</YPos><SelStart>2534</SelStart><SelEnd>2534</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\Program Files (x86)\IAR Systems\Embedded Workbench 6.0 Evaluation\430\inc\msp430x14x.h</Filename><XPos>0</XPos><YPos>56</YPos><SelStart>2715</SelStart><SelEnd>2715</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\main.c</Filename><XPos>0</XPos><YPos>12</YPos><SelStart>1044</SelStart><SelEnd>1044</SelEnd></Tab><ActiveTab>3</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\GB2433.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>602</SelStart><SelEnd>602</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\TFT28.C</Filename><XPos>0</XPos><YPos>69</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\GB2424.h</Filename><XPos>0</XPos><YPos>6</YPos><SelStart>1492</SelStart><SelEnd>1492</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\GB2435.h</Filename><XPos>0</XPos><YPos>99</YPos><SelStart>8517</SelStart><SelEnd>8517</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\TFT28.h</Filename><XPos>0</XPos><YPos>14</YPos><SelStart>763</SelStart><SelEnd>763</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Chinese.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
     <Positions>
       
       
       
       
       
-    <Top><Row0><Sizes><Toolbar-045a0a50><key>iaridepm.enu1</key></Toolbar-045a0a50></Sizes></Row0></Top><Left><Row0><Sizes><Wnd2><Rect><Top>-2</Top><Left>-2</Left><Bottom>605</Bottom><Right>291</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>130208</sizeHorzCX><sizeHorzCY>256082</sizeHorzCY><sizeVertCX>190755</sizeVertCX><sizeVertCY>777209</sizeVertCY></Rect></Wnd2></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd3><Rect><Top>-2</Top><Left>-2</Left><Bottom>131</Bottom><Right>1538</Right><x>-2</x><y>-2</y><xscreen>1540</xscreen><yscreen>133</yscreen><sizeHorzCX>1002604</sizeHorzCX><sizeHorzCY>170294</sizeHorzCY><sizeVertCX>130208</sizeVertCX><sizeVertCY>256082</sizeVertCY></Rect></Wnd3></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+    <Top><Row0><Sizes><Toolbar-0086ff10><key>iaridepm.enu1</key></Toolbar-0086ff10></Sizes></Row0></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>605</Bottom><Right>291</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>130208</sizeHorzCX><sizeHorzCY>256082</sizeHorzCY><sizeVertCX>190755</sizeVertCX><sizeVertCY>777209</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>131</Bottom><Right>1538</Right><x>-2</x><y>-2</y><xscreen>1540</xscreen><yscreen>133</yscreen><sizeHorzCX>1002604</sizeHorzCX><sizeHorzCY>170294</sizeHorzCY><sizeVertCX>130208</sizeVertCX><sizeVertCY>256082</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
   </Desktop>
 </Workspace>
 

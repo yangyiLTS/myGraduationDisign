@@ -7,64 +7,68 @@
     <name>Debug</name>
     <outputs>
       <file>$TOOLKIT_DIR$\inc\in430.h</file>
-      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.r43</file>
-      <file>$TOOLKIT_DIR$\inc\msp430x14x.h</file>
-      <file>$PROJ_DIR$\main.c</file>
-      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</file>
       <file>$PROJ_DIR$\Config.h</file>
-      <file>$PROJ_DIR$\GUI.h</file>
-      <file>$PROJ_DIR$\GB2424.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\math.h</file>
-      <file>$PROJ_DIR$\Touch.H</file>
-      <file>$PROJ_DIR$\Debug\Obj\drop_indicator.pbd</file>
-      <file>$TOOLKIT_DIR$\config\multiplier.xcl</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
-      <file>$TOOLKIT_DIR$\config\lnk430F149.xcl</file>
-      <file>$PROJ_DIR$\Ascii_8x16.h</file>
-      <file>$PROJ_DIR$\Debug\Exe\drop_indicator.txt</file>
-      <file>$PROJ_DIR$\Chinese.h</file>
+      <file>$TOOLKIT_DIR$\inc\msp430x14x.h</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\main.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r43</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.r43</file>
+      <file>$PROJ_DIR$\GUI.c</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
+      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xtgmath.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ymath.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
+      <file>$PROJ_DIR$\TFT28.C</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
+      <file>$PROJ_DIR$\GB2433.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
       <file>$PROJ_DIR$\GB2435.h</file>
       <file>$PROJ_DIR$\Touch.c</file>
+      <file>$TOOLKIT_DIR$\inc\dlib\c\math.h</file>
+      <file>$PROJ_DIR$\Debug\Exe\drop_indicator.txt</file>
       <file>$PROJ_DIR$\TFT28.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\ycheck.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\xtgmath.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Defaults.h</file>
-      <file>$TOOLKIT_DIR$\lib\dlib\dl430fn.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Product.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\yvals.h</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\DLib_Threads.h</file>
-      <file>$PROJ_DIR$\GB2433.h</file>
-      <file>$PROJ_DIR$\TFT28.C</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\ymath.h</file>
-      <file>$PROJ_DIR$\GUI.c</file>
-      <file>$TOOLKIT_DIR$\inc\dlib\c\xencoding_limits.h</file>
+      <file>$PROJ_DIR$\Ascii_8x16.h</file>
+      <file>$TOOLKIT_DIR$\config\lnk430F149.xcl</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.pbi</file>
+      <file>$PROJ_DIR$\GUI.h</file>
+      <file>$PROJ_DIR$\Touch.H</file>
+      <file>$PROJ_DIR$\GB2424.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\drop_indicator.pbd</file>
+      <file>$PROJ_DIR$\Chinese.h</file>
+      <file>$TOOLKIT_DIR$\config\multiplier.xcl</file>
     </outputs>
+    <file>
+      <name>[ROOT_NODE]</name>
+      <outputs>
+        <tool>
+          <name>XLINK</name>
+          <file> 22</file>
+        </tool>
+      </outputs>
+    </file>
     <file>
       <name>$PROJ_DIR$\main.c</name>
       <outputs>
         <tool>
+          <name>ICC430</name>
+          <file> 5</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 13</file>
+          <file> 26</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICC430</name>
-          <file> 3 0 1 6 7 15 8 17 18 10 19 20 29 31 9 21 30 26 23 24 25 32 27 22</file>
+          <file> 2 0 3 1 27 24 29 31 19 28 20 23 14 7 21 15 12 8 18 9 11 17 13 10</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 3 0 1 6 7 15 8 17 18 10 19 20 29 31 9 21 30 26 23 25 32 27 22</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\Debug\Obj\drop_indicator.pbd</name>
-      <inputs>
-        <tool>
-          <name>BILINK</name>
-          <file> 13</file>
+          <file> 2 0 3 1 27 24 29 31 19 28 20 23 14 7 21 15 12 8 18 11 17 13 10</file>
         </tool>
       </inputs>
     </file>
@@ -73,18 +77,18 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 14 12 2 5</file>
+          <file> 25 32 5 6</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>[ROOT_NODE]</name>
-      <outputs>
+      <name>$PROJ_DIR$\Debug\Obj\drop_indicator.pbd</name>
+      <inputs>
         <tool>
-          <name>XLINK</name>
-          <file> 16</file>
+          <name>BILINK</name>
+          <file> 26</file>
         </tool>
-      </outputs>
+      </inputs>
     </file>
   </configuration>
   <configuration>
