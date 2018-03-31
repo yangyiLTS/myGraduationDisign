@@ -23,13 +23,13 @@
 
 #define MAX_DROP 80
 #define TARGET_DROP 60
-#define VOLUME 22 * 550
+#define VOLUME 20 * 550
 uchar Flag = 1;                           //标志位
 uint Time = 0;                           //时间计数变量
 uint count = 0;
 uint set_drop = 60;
 uint total = 0;
-uint capa = VOLUME;
+uint capa = 550*20;
 uint dropspeed;
 uint dropq[5] = { 100, 100, 100, 100, 100 };
 uint cur = 60;
@@ -117,7 +117,7 @@ void motor_step(uchar d){
 //*************************************************************************
 //               水滴下时处理函数
 //*************************************************************************
-int now = 0;
+uint now = 0;
 void drop_deal(){
   Time += 7;
   if (Time < 25){
@@ -148,18 +148,19 @@ void TFT_write_int(unsigned short x, unsigned short y, unsigned int data)
 } 
 
 void TFT_show(){
-  uint progress = (VOLUME/22 - capa/22)*280 / (VOLUME/22) + 60;
+  uint progress = (VOLUME/20 - capa/20)*28 / (VOLUME/200) + 60;
+  TFT_write_int(120,300, progress);
   uint resttime = capa / dropspeed;
   GUIline(0,progress,60,progress,Black);
-  GUIfull(65,95,121,105,Black);
+  GUIfull(65,95,121,125,Black);
   TFT_write_int(120,95, dropspeed);
   LCD_PutString(136,95," mL/s",Blue,Black);
-  GUIfull(70,155,136,165,Black);
-  TFT_write_int(120,155, capa/22);
+  GUIfull(70,155,136,175,Black);
+  TFT_write_int(120,155, capa / 20);
   LCD_PutString(136,155," mL",Blue,Black);
   TFT_write_int(120, 215, set_drop);
   LCD_PutString(136,215, " mL/s",Blue,Black);
-  TFT_write_int(120, 275, VOLUME / 22);
+  TFT_write_int(120, 275, VOLUME / 20);
   LCD_PutString(136,275," mL",Blue,Black);
   LCD_PutSingleChar2435(108,13,10,Yellow,Black);
   uchar h1,h2,m1,m2;
